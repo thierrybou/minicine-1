@@ -1,4 +1,7 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
+
+setlocale(LC_TIME, "fr_FR.UTF8", 'fra');
 
 $current_page = basename($_SERVER['PHP_SELF']);
 

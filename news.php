@@ -1,4 +1,15 @@
-<?php include_once 'partials/header.php' ?>
+<?php
+include_once 'partials/header.php';
+
+$date = !empty($_GET['date']) ? $_GET['date'] : date('Y-m'); // 2015-10
+
+$query = $db->prepare('SELECT * FROM news WHERE DATE_FORMAT(news_date, "%Y-%m") = :date');
+$query->bindValue(':date', $date, PDO::PARAM_STR);
+$query->execute();
+$news = $query->fetchAll();
+
+//echo debug($news);
+?>
 
 		<div class="news-container">
 
@@ -9,18 +20,30 @@
 
 			<div class="row">
 				<div class="col-xs-12 col-sm-9">
-					<?php for ($i = 0; $i < 6; $i++) { ?>
-					<div class="news-post">
-						<h2>Titre actualité</h2>
-						<p>January 1, 2014 by <a href="#">John</a></p>
 
-						<p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+					<?php
+					foreach($news as $article) {
+
+						$time = strtotime($article['news_date']);
+
+						$news_date = strftime('%A %d %B %Y', $time);
+					?>
+					<div class="news-post">
+						<h2><a href=""><?= $article['news_title'] ?></a></h2>
+
+						<p><?= $news_date ?> by <a href="#"><?= $article['news_author'] ?></a></p>
+
 						<hr>
 						<blockquote>
-							<p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+							<p>
+								<?= cutString($article['news_text'], 200, ' [...]') ?>
+							</p>
 						</blockquote>
+
+						<a href="" class="btn btn-default">Lire la suite</a>
 					</div>
 					<?php } ?>
+
 				</div>
 
 				<?php include_once 'partials/sidebar-news.php' ?>
