@@ -24,17 +24,13 @@ $news = $query->fetchAll();
 					<?php
 					foreach($news as $article) {
 
-						$time = strtotime($article['news_date']);
-
 						// Formattage de la date : Lundi 15 janvier 2015
-						$news_date = strftime('%A %d %B %Y', $time);
-						$news_date = ucfirst(strtolower($news_date));
-						$news_date = utf8_encode($news_date);
+						$news_date = news_getFormatDate($article['news_date']);
 					?>
 					<div class="news-post">
-						<h2><a href=""><?= $article['news_title'] ?></a></h2>
+						<h2><a href="article.php?id=<?= $article['news_id'] ?>"><?= $article['news_title'] ?></a></h2>
 
-						<p><?= $news_date ?> by <a href="#"><?= $article['news_author'] ?></a></p>
+						<p><?= $news_date ?> par <a href="#"><?= $article['news_author'] ?></a></p>
 
 						<hr>
 						<blockquote>
@@ -43,7 +39,7 @@ $news = $query->fetchAll();
 							</p>
 						</blockquote>
 
-						<a href="" class="btn btn-default">Lire la suite</a>
+						<a href="article.php?id=<?= $article['news_id'] ?>" class="btn btn-default">Lire la suite</a>
 					</div>
 					<?php } ?>
 
