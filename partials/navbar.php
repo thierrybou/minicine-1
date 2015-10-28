@@ -25,7 +25,7 @@
 
 				</ul>
 
-				<form class="navbar-form navbar-right" action="search.php" method="POST">
+				<form class="navbar-form navbar-right" action="search.php" method="GET">
 					<div class="input-group">
 						<input name="search" type="text" class="form-control" placeholder="Recherche rapide...">
 						<span class="input-group-btn">
