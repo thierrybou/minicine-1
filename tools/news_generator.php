@@ -118,13 +118,16 @@ for ($i = 0; $i < 50; $i++) {
 
 	//echo $rand_date.'<br>';
 
-	$news_text = $contents[$i];
+	$news_text = str_replace(';', '.', trim($contents[$i]));
+	$first_space_pos = strpos($news_text, ' ');
 	$first_point_pos = strpos($news_text, '.');
 
-	$news_title = substr($news_text, 0, $first_point_pos);
+	$news_author = substr($news_text, 0, $first_space_pos);
+	$news_title = substr($news_text, $first_space_pos + 1, $first_point_pos - $first_space_pos -1 );
 	$news_text = substr($news_text, $first_point_pos + 2);
 
 	$news[] = array(
+		'news_author' => $news_author,
 		'news_date' => $rand_date,
 		'news_text' => ucfirst($news_text),
 		'news_title' => ucfirst(trim($news_title))
@@ -135,9 +138,8 @@ for ($i = 0; $i < 50; $i++) {
 echo '<pre>';
 print_r($news);
 echo '</pre>';
-*/
 
-/*
+
 foreach($news as $key => $article) {
 
 	$query = $db->prepare('INSERT INTO news (news_title, news_text, news_date) VALUES (:news_title, :news_text, :news_date)');
@@ -148,16 +150,28 @@ foreach($news as $key => $article) {
 }
 */
 
-$query = $db->prepare('INSERT INTO news (news_title, news_text, news_date) VALUES (:news_title, :news_text, :news_date)');
+$query = $db->prepare('INSERT INTO news (news_author, news_title, news_text, news_date) VALUES (:news_author, :news_title, :news_text, :news_date)');
+$query->bindParam('news_author', $news_author);
 $query->bindParam('news_date', $news_date);
 $query->bindParam('news_text', $news_text);
 $query->bindParam('news_title', $news_title);
 
+$count = 0;
+
 foreach($news as $key => $article) {
 
+	$news_author = $article['news_author'];
 	$news_date = $article['news_date'];
 	$news_text = $article['news_text'];
 	$news_title = $article['news_title'];
 
 	$query->execute();
+
+	$insert_id = $db->lastInsertId();
+
+	if (!empty($insert_id)) {
+		$count++;
+	}
 }
+
+echo $count.' news insérée(s)';
