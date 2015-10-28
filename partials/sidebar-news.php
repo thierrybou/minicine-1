@@ -11,9 +11,9 @@
 
 									$date_value = date('Y-m', $time);
 
-									$month_label = ucfirst(strftime('%B', $time));
+									$month_label = utf8_encode(strftime('%B', $time));
 
-									$date_label = $month_label.' '.date('Y', $time); // Octobre 2015
+									$date_label = ucfirst($month_label).' '.date('Y', $time); // Octobre 2015
 								?>
 								<li><a href="news.php?date=<?= $date_value ?>"><?= $date_label ?></a></li>
 								<?php } ?>

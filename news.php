@@ -26,7 +26,9 @@ $news = $query->fetchAll();
 
 						$time = strtotime($article['news_date']);
 
-						$news_date = strftime('%A %d %B %Y', $time);
+						// Formattage de la date : Lundi 15 janvier 2015
+						$news_date = utf8_encode(strftime('%A %d %B %Y', $time));
+						$news_date = ucfirst(strtolower($news_date));
 					?>
 					<div class="news-post">
 						<h2><a href=""><?= $article['news_title'] ?></a></h2>
