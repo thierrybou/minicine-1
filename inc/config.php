@@ -1,5 +1,5 @@
 <?php
-setlocale(LC_TIME, 'fr_FR.UTF8', 'fra');
+setlocale(LC_TIME, 'fr_FR', 'fra');
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
