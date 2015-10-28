@@ -6,7 +6,7 @@ $search = '';
 if (!empty($_GET['search'])) {
 	$search = $_GET['search'];
 }
-
+// Meme chose que les lignes 4 a 8 en ternaire
 //$search = !empty($_GET['search']) ? $_GET['search'] : '';
 
 // On récupère les champs du formulaire de recherche avancée
@@ -16,15 +16,17 @@ $year = !empty($_GET['year']) ? $_GET['year'] : '';
 $actors = !empty($_GET['actors']) ? $_GET['actors'] : '';
 $directors = !empty($_GET['directors']) ? $_GET['directors'] : '';
 
-
+// On fait une requete pour recuperer la liste des annees de film dedoublonnees
 $query = $db->query('SELECT DISTINCT(year) FROM movies ORDER BY year DESC');
 $results = $query->fetchAll();
 
+// On rempli un tableau avec toutes les annees en faisant sauter la cle "year"
 $movie_years = array();
 foreach($results as $result) {
 	$movie_years[] = $result['year'];
 }
 
+// On recupere tous les genres de film
 $query = $db->query('SELECT * FROM genres ORDER BY genre_name ASC');
 $movie_genres = $query->fetchAll();
 
@@ -51,9 +53,12 @@ if (!empty($_GET)) {
 
 	} else {
 
+		// On construit une requete SQL
 		$sql = 'SELECT * FROM movies WHERE 1 ';
 		$bindings = array();
 
+		// Pour chacun des champs que l'utilisateur a renseigné,
+		// On ajoute une clause where au SQL et un binding
 		if (!empty($title)) {
 			$sql .= 'AND title LIKE :title ';
 			$bindings[':title'] = '%'.$title.'%';
@@ -77,9 +82,10 @@ if (!empty($_GET)) {
 
 		$query = $db->prepare($sql);
 
-		echo $sql;
-		echo debug($bindings);
+		//echo $sql;
+		//echo debug($bindings);
 
+		// On transmet chaque binding a la requete
 		foreach($bindings as $key => $value) {
 			$type = is_numeric($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
 			$query->bindValue($key, $value, $type);
@@ -155,13 +161,23 @@ if (!empty($_GET)) {
 		<?php if (!empty($_GET)) { ?>
 		<hr>
 		<h2><?= $count_results ?> résultat(s) pour la recherche <?= !empty($search) ? '&laquo; '.$search.' &raquo;' : '' ?></h2>
+		<br>
 
-		<?php foreach($search_results as $movie) { ?>
+		<div class="search-results list-group">
 
-		<a href="movie.php?id=<?= $movie['id'] ?>"><?= $movie['title'] ?></a><br>
+			<?php foreach($search_results as $movie) { ?>
+			<a href="movie.php?id=<?= $movie['id'] ?>" class="list-group-item">
+				<img height="80" width="60" class="movie-cover" src="<?= getCover($movie['id']) ?>" align="left">
+				<h4 class="list-group-item-heading"><?= $movie['title'] ?> (<?= $movie['year'] ?>)</h4>
+				<p class="list-group-item-text">
+					<?= $movie['genres'] ?>
+					<br>
+					<?= $movie['actors'] ?>
+				</p>
+			</a>
+			<?php } ?>
 
-		<?php } ?>
-
+		</div>
 
 		<?php } ?>
 

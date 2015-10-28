@@ -48,3 +48,7 @@ body {
 .form-group {
 	margin-top: 10px;
 }
+
+.search-results .movie-cover {
+	margin-right: 20px;
+}
