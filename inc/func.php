@@ -142,3 +142,18 @@ function getSimilarMovies($movie, $type, $limit = 0) {
 
 	return $result;
 }
+
+// NEWS
+
+function news_getFormatDate($time, $format = '%A %d %B %Y') {
+
+	if (!is_numeric($time)) {
+		$time = strtotime($time);
+	}
+
+	$date = strftime($format, $time);
+	$date = ucfirst(strtolower($date));
+	$date = utf8_encode($date);
+
+	return $date;
+}
